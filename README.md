@@ -1,1 +1,3 @@
-# Mentorship Project 2020
+# **​Artificial Intelligence to Improve U.S. Military Tactics**
+
+This project is based on the Millennium Challenge from 2002 which was centered around a fictional war game between the United States and the Middle East. The factions were both controlled by US generals and through live exercises and computer simulations, Marine Corps Lieutenant General Paul K. Van Riper, commander of the Middle East, was able to deal significant damage to the US Forces. Although he eventually lost at the end of the war games, it shed light on some of the flaws of US strategy. Our program is a superhuman artificial intelligence which can be used to predict the best plan of attack to take down another country in war or used to simulate an attack on the US to point out our flaws.
