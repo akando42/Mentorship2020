@@ -15,3 +15,13 @@ class Country:
         AIR_FORCE_ASSETS = e
         MANPOWER = f
         NUCLEAR_CAPABILITIES = g
+
+    def toString(self):
+        print(self.ID_TAG)
+        print(self.GDP)
+        print(self.ARMY_ASSETS)
+        print(self.NAVY_ASSETS)
+        print(self.AIR_FORCE_ASSETS)
+        print(self.MANPOWER)
+        print(self.NUCLEAR_CAPABILITIES)
+
