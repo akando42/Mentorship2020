@@ -7,7 +7,10 @@ class Country:
     MANPOWER = 0
     NUCLEAR_CAPABILITIES = 0
 
-    def __init__(self, a,b,c,d,e,f,g):
+    def __init__(self):
+        ID_TAG = "n/a"
+
+    def __init__(self, a='',b=0,c=0,d=0,e=0,f=0,g=0):
         ID_TAG = a
         GDP = b
         ARMY_ASSETS = c
