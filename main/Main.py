@@ -82,3 +82,8 @@ class Game:
             else:
                 print('Wrong input. Try again.')
         print(moves[int(maneuver)][int(military_type)])
+
+
+
+
+
