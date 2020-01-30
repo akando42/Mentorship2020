@@ -1,5 +1,5 @@
 class Country:
-    ID_TAG = ''
+    ID_TAG = 'N/A'
     GDP = 0
     ARMY_ASSETS = 0
     NAVY_ASSETS = 0
@@ -7,10 +7,7 @@ class Country:
     MANPOWER = 0
     NUCLEAR_CAPABILITIES = 0
 
-    def __init__(self):
-        ID_TAG = "n/a"
-
-    def __init__(self, a='',b=0,c=0,d=0,e=0,f=0,g=0):
+    def __init__(self,a='N/A',b=0,c=0,d=0,e=0,f=0,g=0):
         ID_TAG = a
         GDP = b
         ARMY_ASSETS = c
