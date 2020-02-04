@@ -3,18 +3,30 @@ from openpyxl import load_workbook
 from main import Country
 from main import Reader
 from main import Reader2
+from main import Coordinates
 
 class Main:
     end_game = False
 
+    # Countries Init
     print('Welcome to the the Battle Simulator')
-    R1 = Reader.Reader()
-
-    c1 = R1.c1Init()
-    c2 = R1.c2Init()
-
+    c1 = Reader.country_init(1)
+    c2 = Reader.country_init(2)
     print(c1.ID_TAG)
     print(c2.ID_TAG)
+
+    # Battle Location Init
+    print("Select Battle Location")
+    battle_loc = Coordinates.Cords()
+    loc_type = input("Entering the following number for:\n[0] Custom Location\n[1] Random Location\n")
+    if loc_type == 0:
+        x = input("Enter x value:\n")
+        y = input("Enter y value:\n")
+        battle_loc.set_loc(x,y)
+    else:
+        battle_loc.set_rand_cords()
+    print("Battle will take place at: " + battle_loc.get_loc())
+
 
     # while(end_game == False):
     #     military_type = input("Entering the following number for:\n[0] Offense\n[1] Defense\n")
