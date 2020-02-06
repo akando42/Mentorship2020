@@ -6,16 +6,26 @@ from main import Reader2
 from main import Coordinates
 
 class Main:
-    def prob(self,c):
-        prob = (self.GDPc*c.GDP) + (self.ARMYc*c.ARMY_ASSETS) + (self.NAVYc*c.NAVY_ASSETS) + (self.AFc*c.AIR_FORCE_ASSETS) + (self.MPc*c.MANPOWER) + (self.NC*c.NUCLEAR_CAPABILITIES)
-        prob *= self.maneuvers[self.move_player][self.move_comp]
+    # Game coefficients
+    GDPc = .01
+    ARMYc = .01
+    NAVYc = .01
+    AFc = .01
+    MPc = .01
+    NC = .01
+    def __init__(self):
+        n =4
+    def prob(Main,c):
+        prob = (Main.GDPc*c.GDP) + (Main.ARMYc*Main.armyCommitments) + (Main.NAVYc*Main.navyCommitments) + (Main.AFc*Main.afCommitments) + (Main.NC*Main.ncCommitments)
+        prob *= Main.maneuvers[Main.move_player][Main.move_comp]
         return prob
     def winner(a,b):
         if(b != 0):
             return 100*(a/b)
         else:
             return print("Error")
-    def getUserMoves(self):
+    def getUserMoves(n):
+        n = 1
         move_player = -1
         military_type = input("Entering the following number for:\n[0] Offense\n[1] Defense\n")
         if (military_type == '0'):
@@ -68,24 +78,17 @@ class Main:
         if(int(ARMY) < c.ARMY_ASSETS):
             return int(ARMY)
     def getNavyResources(c):
-        NAVY = input("Enter number of army assets between 0 and " + str(c.NAVY_ASSETS) + "\n")
+        NAVY = input("Enter number of navy assets between 0 and " + str(c.NAVY_ASSETS) + "\n")
         if(int(NAVY) < c.NAVY_ASSETS):
             return int(NAVY)
     def getAFResources(c):
-        AF = input("Enter number of army assets between 0 and " + str(c.AIR_FORCE_ASSETS) + "\n")
+        AF = input("Enter number of air force assets between 0 and " + str(c.AIR_FORCE_ASSETS) + "\n")
         if(int(AF) < c.AIR_FORCE_ASSETS):
             return int(AF)
     def getNCResources(c):
-        NC = input("Enter number of army assets between 0 and " + str(c.NUCLEAR_CAPABILITIES) + "\n")
+        NC = input("Enter number of nuclear assets between 0 and " + str(c.NUCLEAR_CAPABILITIES) + "\n")
         if(int(NC) < c.NUCLEAR_CAPABILITIES):
             return int(NC)
-    #Game coefficients
-    GDPc = .01
-    ARMYc = .01
-    NAVYc = .01
-    AFc = .01
-    MPc = .01
-    NC = .01
     #Defines variable committed resources
     armyCommitments = 0
     navyCommitments = 0
@@ -117,7 +120,7 @@ class Main:
     while (end_game == False):
         move_comp = np.random.uniform(0, 9)
         #Gets user move
-        move_player = getUserMoves()
+        move_player = getUserMoves(1)
         #Gets how much the user wants to commit
         armyCommitments = getArmyResources(c1)
         navyCommitments = getNavyResources(c1)
@@ -128,3 +131,14 @@ class Main:
               "You committed " + str(afCommitments) + " air units\n",
               "You committed " + str(ncCommitments) + " nuclear missiles\n",
               "")
+        #Set random values for computer
+        a1 = int(np.random.uniform(0, c2.ARMY_ASSETS))
+        a2 = int(np.random.uniform(0, c2.NAVY_ASSETS))
+        a3 = int(np.random.uniform(0, c2.AIR_FORCE_ASSETS))
+        a4 = int(np.random.uniform(0, c2.NUCLEAR_CAPABILITIES))
+        #player win percentage
+        p1 = prob(c1)
+        p2 = prob(c2)
+
+        winner = winner(p1,p2)
+        print("There is an " + str(winner) +" of you winning")
