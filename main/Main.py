@@ -5,19 +5,15 @@ from main import Reader
 from main import Reader2
 from main import Coordinates
 
-class Main:
 
+class Main(object):
     def __init__(self):
-        n =4
+        n = 4
     def prob(self):
         prob = (self.ARMYc*self.armyCommitments) + (self.NAVYc*self.navyCommitments) + (self.AFc*self.afCommitments) + (self.NC*self.ncCommitments)
-        prob *= self.maneuvers[self.move_player][self.move_comp]
         return prob
-    def winner(a,b):
-        if(b != 0):
-            return 100*(a/b)
-        else:
-            return print("Error")
+    def winner(self,a,b):
+            return 10000*(a/b)-50
     def getUserMoves(n):
         n = 1
         move_player = -1
@@ -67,42 +63,48 @@ class Main:
                 print('Wrong input. Try again.')
         return move_player
 
-    def getArmyResources(c):
+    def getArmyResources(self,c):
         ARMY = input("Enter number of army assets between 0 and " + str(c.ARMY_ASSETS) + "\n")
         if(int(ARMY) < c.ARMY_ASSETS):
             return int(ARMY)
-    def getNavyResources(c):
+    def getNavyResources(self,c):
         NAVY = input("Enter number of navy assets between 0 and " + str(c.NAVY_ASSETS) + "\n")
         if(int(NAVY) < c.NAVY_ASSETS):
             return int(NAVY)
-    def getAFResources(c):
+    def getAFResources(self,c):
         AF = input("Enter number of air force assets between 0 and " + str(c.AIR_FORCE_ASSETS) + "\n")
         if(int(AF) < c.AIR_FORCE_ASSETS):
             return int(AF)
-    def getNCResources(c):
+    def getNCResources(self,c):
         NC = input("Enter number of nuclear assets between 0 and " + str(c.NUCLEAR_CAPABILITIES) + "\n")
         if(int(NC) < c.NUCLEAR_CAPABILITIES):
             return int(NC)
-    #Sets up maneuver matrix
-    maneuvers = np.zeros((11,11))
+    # Game coefficients
+    GDPc = 1
+    ARMYc = 2
+    NAVYc = 3
+    AFc = 4
+    MPc = 5
+    NC = 6
+    # Defines variable committed resources
+    armyCommitments = 0
+    navyCommitments = 0
+    afCommitments = 0
+    ncCommitments = 0
+    # Sets up maneuver matrix
+    maneuvers = np.zeros((11, 11))
     wb = load_workbook('MilitaryTactics.xlsx')
     source = wb.active
     ws = wb.copy_worksheet(source)
     for i in range(1, 11):
         for j in range(1, 11):
             maneuvers[i][j] = ws.cell(row=i, column=j).value
-    # Game coefficients
-    GDPc = .01
-    ARMYc = .01
-    NAVYc = .01
-    AFc = .01
-    MPc = .01
-    NC = .01
-    #Defines variable committed resources
-    armyCommitments = 0
-    navyCommitments = 0
-    afCommitments = 0
-    ncCommitments = 0
+        # Records moves of both players to determine win probability
+        move_player = 0
+        move_comp = 0
+class Main:
+
+    M1 = Main()
     #Starts the game
     end_game = False
     # Countries Init
@@ -111,9 +113,6 @@ class Main:
     c2 = Reader.country_init(2)
     print("You have chosen to be " + c1.ID_TAG)
     print("Your opponent is " + c2.ID_TAG)
-    # Records moves of both players to determine win probability
-    move_player = 0
-    move_comp = 0
     # Battle Location Init
     print("Select Battle Location")
     battle_loc = Coordinates.Cords()
@@ -125,28 +124,32 @@ class Main:
     else:
         battle_loc.set_rand_cords()
     print("Battle will take place at: " + str(battle_loc.get_loc()))
-    print(maneuvers[0][0])
+    print(M1.maneuvers[0][0])
     while (end_game == False):
         move_comp = np.random.uniform(0, 9)
         #Gets user move
-        move_player = getUserMoves(1)
+        move_player = M1.getUserMoves()
         #Gets how much the user wants to commit
-        armyCommitments = getArmyResources(c1)
-        navyCommitments = getNavyResources(c1)
-        afCommitments = getAFResources(c1)
-        ncCommitments = getNCResources(c1)
-        print("You committed " + str(armyCommitments) + " ground units\n",
-              "You committed " + str(navyCommitments) + " naval units\n",
-              "You committed " + str(afCommitments) + " air units\n",
-              "You committed " + str(ncCommitments) + " nuclear missiles\n",
+        M1.armyCommitments = M1.getArmyResources(c1)
+        M1.navyCommitments = M1.getNavyResources(c1)
+        M1.afCommitments = M1.getAFResources(c1)
+        M1.ncCommitments = M1.getNCResources(c1)
+        print("You committed " + str(M1.armyCommitments) + " ground units\n",
+              "You committed " + str(M1.navyCommitments) + " naval units\n",
+              "You committed " + str(M1.afCommitments) + " air units\n",
+              "You committed " + str(M1.ncCommitments) + " nuclear missiles\n",
               "")
-        p1 = prob()
+        p1 = M1.prob()
+        print(M1.armyCommitments)
+        print(M1.navyCommitments)
         #Set random values for computer
-        armyCommitments = int(np.random.uniform(0, c2.ARMY_ASSETS))
-        navyCommitments = int(np.random.uniform(0, c2.NAVY_ASSETS))
-        afCommitments = int(np.random.uniform(0, c2.AIR_FORCE_ASSETS))
-        ncCommitments = int(np.random.uniform(0, c2.NUCLEAR_CAPABILITIES))
+        M1.armyCommitments = int(np.random.uniform(0, c2.ARMY_ASSETS))
+        M1.navyCommitments = int(np.random.uniform(0, c2.NAVY_ASSETS))
+        M1.afCommitments = int(np.random.uniform(0, c2.AIR_FORCE_ASSETS))
+        M1.ncCommitments = int(np.random.uniform(0, c2.NUCLEAR_CAPABILITIES))
+        print(M1.armyCommitments)
+        print(M1.navyCommitments)
         #player win percentage
-        p2 = prob()
-        winner = winner(p1,p2)
-        print("There is an " + str(winner) +" of you winning")
+        p2 = M1.prob()
+        winner = M1.winner(p1,p2)
+        print("There is an " + str(winner) +" percent of you winning")
