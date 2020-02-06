@@ -14,30 +14,30 @@ class Main:
         if(b != 0):
             return 100*(a/b)
         else:
-            return 1
+            return print("Error")
     def getUserMoves(self):
+        move_player = -1
         military_type = input("Entering the following number for:\n[0] Offense\n[1] Defense\n")
         if (military_type == '0'):
-            maneuver = input(
-                "Pick one of the following offensive maneuvers: \n[0] Push Middle\n[1] Flank Right\n[2] Flank Left\n[3] Pincer\n[4] Push Equally\n[5]Trap on Two Fronts\n[999] Go back to beginning\n")
+            maneuver = input("Pick one of the following offensive maneuvers: \n[0] Push Middle\n[1] Flank Right\n[2] Flank Left\n[3] Pincer\n[4] Push Equally\n[5]Trap on Two Fronts\n[999] Go back to beginning\n")
             if (maneuver == '0'):
                 print('You tried to push middle\n')
-                self.move_player = 0
+                move_player = 0
             elif (maneuver == '1'):
                 print('You tried to flank right\n')
-                self.move_player = 1
+                move_player = 1
             elif (maneuver == '2'):
                 print('You tried to flank left\n')
-                self.move_player = 2
+                move_player = 2
             elif (maneuver == '3'):
                 print('You tried to do a pincer movement\n')
-                self.move_player = 3
+                move_player = 3
             elif (maneuver == '4'):
                 print('You tried to push equally on all fronts\n')
-                self.move_player = 4
+                move_player = 4
             elif (maneuver == '5'):
                 print('You tried to trap the enemy on two fronts\n')
-                self.move_player = 5
+                move_player = 5
             elif (maneuver == '999'):
                 print("Return to beginning")
             else:
@@ -47,20 +47,22 @@ class Main:
                 'Pick one of the following defensive maneuvers:\n[0] Retreat\n[1] Retreating Fire\n[2] Find and Hold a Choke Point\n[3] Turtle')
             if (maneuver == '0'):
                 print('You tried to retreat\n')
-                self.move_player = 6
+                move_player = 6
             elif (maneuver == '1'):
                 print('You tried to retreat to cover fire\n')
-                self.move_player = 7
+                move_player = 7
             elif (maneuver == '2'):
                 print('You tried to find and hold a choke point\n')
-                self.move_player = 8
+                move_player = 8
             elif (maneuver == '3'):
                 print('You tried to create a defensive turtle for a better defense\n')
-                self.move_player = 9
+                move_player = 9
             elif (maneuver == '999'):
                 print("Return to beginning")
             else:
                 print('Wrong input. Try again.')
+        return move_player
+
     def getArmyResources(c):
         ARMY = input("Enter number of army assets between 0 and " + str(c.ARMY_ASSETS) + "\n")
         if(int(ARMY) < c.ARMY_ASSETS):
@@ -110,8 +112,19 @@ class Main:
         battle_loc.set_loc(x,y)
     else:
         battle_loc.set_rand_cords()
-    print("Battle will take place at: " + battle_loc.get_loc())
+    print("Battle will take place at: " + str(battle_loc.get_loc()))
 
     while (end_game == False):
         move_comp = np.random.uniform(0, 9)
-        getUserMoves()
+        #Gets user move
+        move_player = getUserMoves()
+        #Gets how much the user wants to commit
+        armyCommitments = getArmyResources(c1)
+        navyCommitments = getNavyResources(c1)
+        afCommitments = getAFResources(c1)
+        ncCommitments = getNCResources(c1)
+        print("You committed " + str(armyCommitments) + " ground units\n",
+              "You committed " + str(navyCommitments) + " naval units\n",
+              "You committed " + str(afCommitments) + " air units\n",
+              "You committed " + str(ncCommitments) + " nuclear missiles\n",
+              "")
