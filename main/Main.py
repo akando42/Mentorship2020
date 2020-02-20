@@ -2,7 +2,7 @@ import numpy as np
 from openpyxl import load_workbook
 from main import Country
 from main import Reader
-from main import Reader2
+#from main import Reader2
 from main import Coordinates
 
 
@@ -79,13 +79,13 @@ class Main(object):
         NC = input("Enter number of nuclear assets between 0 and " + str(c.NUCLEAR_CAPABILITIES) + "\n")
         if(int(NC) < c.NUCLEAR_CAPABILITIES):
             return int(NC)
-    # Game coefficients
+    # Game coefficients (subject to change as testing goes on)
     GDPc = 1
-    ARMYc = 2
-    NAVYc = 3
-    AFc = 4
-    MPc = 5
-    NC = 6
+    ARMYc = .654
+    NAVYc = 1
+    AFc = 1
+    MPc = 1
+    NC = 0
     # Defines variable committed resources
     armyCommitments = 0
     navyCommitments = 0
