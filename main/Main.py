@@ -2,7 +2,7 @@ import numpy as np
 from openpyxl import load_workbook
 from main import Country
 from main import Reader
-#from main import Reader2
+from main import Reader2
 from main import Coordinates
 
 
@@ -11,6 +11,7 @@ class Main(object):
         n = 4
     def prob(self):
         prob = (self.ARMYc*self.armyCommitments) + (self.NAVYc*self.navyCommitments) + (self.AFc*self.afCommitments) + (self.NC*self.ncCommitments)
+        prob *= self.maneuvers[self.move_player][self.move_comp]
         return prob
     def winner(self,a,b):
             return 10000*(a/b)-50
@@ -79,11 +80,15 @@ class Main(object):
         NC = input("Enter number of nuclear assets between 0 and " + str(c.NUCLEAR_CAPABILITIES) + "\n")
         if(int(NC) < c.NUCLEAR_CAPABILITIES):
             return int(NC)
+    def determineComputerMove(self):
+        result = [0,0,0,0]
+        #Put in some algorithm to determine smallest number of resources need to win a battle
+        return result
     # Game coefficients (subject to change as testing goes on)
     GDPc = 1
     ARMYc = .654
-    NAVYc = 1
-    AFc = 1
+    NAVYc = .459
+    AFc = .515
     MPc = 1
     NC = 0
     # Defines variable committed resources
@@ -99,9 +104,9 @@ class Main(object):
     for i in range(1, 11):
         for j in range(1, 11):
             maneuvers[i][j] = ws.cell(row=i, column=j).value
-        # Records moves of both players to determine win probability
-        move_player = 0
-        move_comp = 0
+    # Records moves of both players to determine win probability
+    move_player = 0
+    move_comp = 0
 class Main:
 
     M1 = Main()
@@ -139,16 +144,17 @@ class Main:
               "You committed " + str(M1.afCommitments) + " air units\n",
               "You committed " + str(M1.ncCommitments) + " nuclear missiles\n",
               "")
+        if(M1.ncCommitments != 0):
+            print("No one won because the utilization of nuclear weapons causes mutually assured destruction")
+            end_game = True
+            break
+        #number used to determine players chance of winning
         p1 = M1.prob()
-        print(M1.armyCommitments)
-        print(M1.navyCommitments)
-        #Set random values for computer
-        M1.armyCommitments = int(np.random.uniform(0, c2.ARMY_ASSETS))
-        M1.navyCommitments = int(np.random.uniform(0, c2.NAVY_ASSETS))
-        M1.afCommitments = int(np.random.uniform(0, c2.AIR_FORCE_ASSETS))
-        M1.ncCommitments = int(np.random.uniform(0, c2.NUCLEAR_CAPABILITIES))
-        print(M1.armyCommitments)
-        print(M1.navyCommitments)
+        comp_resources = M1.determineComputerMove()
+        M1.armyCommitments = comp_resources[1]
+        M1.navyCommitments = comp_resources[2]
+        M1.afCommitments = comp_resources[3]
+        M1.ncCommitments = comp_resources[4]
         #player win percentage
         p2 = M1.prob()
         winner = M1.winner(p1,p2)
