@@ -83,6 +83,9 @@ class Main(object):
     def determineComputerMove(self):
         result = [0,0,0,0]
         #Put in some algorithm to determine smallest number of resources need to win a battle
+        player_assets = self.armyCommitments+self.navyCommitments+self.afCommitments+self.ncCommitments
+        while(will_to_live == True):
+            will_to_live = False
         return result
     # Game coefficients (subject to change as testing goes on)
     GDPc = 1
@@ -107,6 +110,7 @@ class Main(object):
     # Records moves of both players to determine win probability
     move_player = 0
     move_comp = 0
+
 class Main:
 
     M1 = Main()
