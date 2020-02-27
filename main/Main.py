@@ -23,21 +23,27 @@ class Main(object):
             if (maneuver == '0'):
                 print('You tried to push middle\n')
                 self.move_player = 1
+                self.player_str = "pushed middle"
             elif (maneuver == '1'):
-                print('You tried to flank right\n')
+                print('You tried to flanked right\n')
                 self.move_player = 2
+                self.player_str = "flank right"
             elif (maneuver == '2'):
-                print('You tried to flank left\n')
+                print('You tried to flanked left\n')
                 self.move_player = 3
+                self.player_str = "flanked left"
             elif (maneuver == '3'):
                 print('You tried to do a pincer movement\n')
                 self.move_player = 4
+                self.player_str = "used a pincer movement"
             elif (maneuver == '4'):
                 print('You tried to push equally on all fronts\n')
                 self.move_player = 5
+                self.player_str = "pushed equally on all fronts"
             elif (maneuver == '5'):
                 print('You tried to trap the enemy on two fronts\n')
                 self.move_player = 6
+                self.player_str = "tried to trap the enemy on two fronts"
             elif (maneuver == '999'):
                 print("Return to beginning")
             else:
@@ -48,15 +54,19 @@ class Main(object):
             if (maneuver == '0'):
                 print('You tried to retreat\n')
                 self.move_player = 7
+                self.player_str = "tried to retreat"
             elif (maneuver == '1'):
                 print('You tried to retreat to cover fire\n')
                 self.move_player = 8
+                self.player_str = "retreated with cover fire"
             elif (maneuver == '2'):
                 print('You tried to find and hold a choke point\n')
                 self.move_player = 9
+                self.player_str = "held a choke point"
             elif (maneuver == '3'):
                 print('You tried to create a defensive turtle for a better defense\n')
                 self.move_player = 10
+                self.player_str = "created a defensive turtle"
             elif (maneuver == '999'):
                 print("Return to beginning")
             else:
@@ -82,20 +92,13 @@ class Main(object):
         n+= 100
         result = [0,0,0,0]
         #Put in some algorithm to determine smallest number of resources need to win a battle
-        result [0] = int(n / self.ARMYc)
-        if(result [0] > C.ARMY_ASSETS):
-            result [0] == C.ARMY_ASSETS
-        n-= result [0]
-
-        result[1] = int(n / self.NAVYc)
-        if (result[1] > C.NAVY_ASSETS):
-            result[1] == C.NAVY_ASSETS
-        n -= result[1]
-
-        result[2] = int(n / self.AFc)
-        if (result[2] > C.AIR_FORCE_ASSETS):
-            result[2] == C.AIR_FORCE_ASSETS
-        n -= result[2]
+        self.armyCommitments /= self.maneuvers[self.move_comp][self.move_player]
+        result [0] = int(self.armyCommitments) +1
+        self.navyCommitments /= self.maneuvers[self.move_comp][self.move_player]
+        result[1] = int(self.navyCommitments) + 1
+        self.afCommitments /= self.maneuvers[self.move_comp][self.move_player]
+        result[2] = int(self.afCommitments) + 1
+        result[3] = 0
 
         return result
     # Game coefficients (subject to change as testing goes on)
@@ -121,13 +124,15 @@ class Main(object):
     # Records moves of both players to determine win probability
     move_player = 0
     move_comp = 0
+    player_str = " "
 
 class Main:
 
     M1 = Main()
     #Starts the game
-    M1.move_comp = 3
+    M1.move_comp = 1
     end_game = False
+    comp_str = ""
     # Countries Init
     print('Welcome to the the Battle Simulator')
     c1 = Reader.country_init(1)
@@ -148,12 +153,24 @@ class Main:
     while (end_game == False):
         #Gets user move
         move_player = M1.getUserMoves(1)
+        if(M1.move_player == 1):
+            M1.move_comp = 4
+            comp_str = "used a pincer movement"
+        if (M1.move_player == 2):
+            M1.move_comp = 1
+            comp_str = "pushed middle"
+        if (M1.move_player == 3):
+            M1.move_comp = 1
+            comp_str = "pushed middle"
+        if (M1.move_player == 4):
+            M1.move_comp = 5
+            comp_str = "pushed equally on all fronts"
         #Gets how much the user wants to commit
         M1.armyCommitments = M1.getArmyResources(c1)
         M1.navyCommitments = M1.getNavyResources(c1)
         M1.afCommitments = M1.getAFResources(c1)
         M1.ncCommitments = M1.getNCResources(c1)
-        print("You committed " + str(M1.armyCommitments) + " ground units\n",
+        print(" You committed " + str(M1.armyCommitments) + " ground units\n",
               "You committed " + str(M1.navyCommitments) + " naval units\n",
               "You committed " + str(M1.afCommitments) + " air units\n",
               "You committed " + str(M1.ncCommitments) + " nuclear missiles\n",
@@ -165,13 +182,14 @@ class Main:
         #number used to determine players chance of winning
         p1 = M1.prob()
         comp_resources = M1.determineComputerMove(p1,c2)
-        M1.armyCommitments = comp_resources[0]
-        M1.navyCommitments = comp_resources[1]
-        M1.afCommitments = comp_resources[2]
-        M1.ncCommitments = comp_resources[3]
+        print(" The computer committed " + str(comp_resources[0]) + " ground units\n",
+              "The computer committed " + str(comp_resources[1]) + " naval units\n",
+              "The computer committed " + str(comp_resources[2]) + " air units\n",
+              "The computer committed " + str(comp_resources[3]) + " nuclear missiles\n",
+              "")
         #player win percentage
-        p2 = M1.prob()
+        p2 = (M1.prob()/.5) * M1.maneuvers[M1.move_comp][M1.move_player]
         winner = M1.winner(p1,p2)
-        print("There is an " + str(winner) +" percent of you winning")
-        print("The computer used " +"FIND WAY TO PUT ENEMY MOVE" + " while you used " + "FIND A WAY TO PUT PLAYER MOVE")
+        print("There is an " + str(winner) +" percent chance of you winning")
+        print("The computer " + comp_str + " while you " + M1.player_str)
         end_game = True
