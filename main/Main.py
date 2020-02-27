@@ -14,7 +14,7 @@ class Main(object):
         p *= self.maneuvers[self.move_player][self.move_comp]
         return p
     def winner(self,a,b):
-            return 100*(a/b)-10
+            return 100*(a/b)-20
     def getUserMoves(self,n):
         n = 1
         military_type = input("Entering the following number for:\n[0] Offense\n[1] Defense\n")
@@ -93,17 +93,17 @@ class Main(object):
         result = [0,0,0,0]
         #Put in some algorithm to determine smallest number of resources need to win a battle
         self.armyCommitments /= self.maneuvers[self.move_comp][self.move_player]
-        result [0] = int(self.armyCommitments) +1
+        result [0] = int(self.armyCommitments) + 15
         self.navyCommitments /= self.maneuvers[self.move_comp][self.move_player]
-        result[1] = int(self.navyCommitments) + 1
+        result[1] = int(self.navyCommitments) + 15
         self.afCommitments /= self.maneuvers[self.move_comp][self.move_player]
-        result[2] = int(self.afCommitments) + 1
+        result[2] = int(self.afCommitments) + 15
         result[3] = 0
 
         return result
     # Game coefficients (subject to change as testing goes on)
     GDPc = 1
-    ARMYc = .654
+    ARMYc = .542
     NAVYc = .459
     AFc = .515
     MPc = 1
@@ -165,6 +165,24 @@ class Main:
         if (M1.move_player == 4):
             M1.move_comp = 5
             comp_str = "pushed equally on all fronts"
+        if (M1.move_player == 5):
+            M1.move_comp = 8
+            comp_str = "retreated with cover fire"
+        if (M1.move_player == 6):
+            M1.move_comp = 5
+            comp_str = "pushed equally across all fronts"
+        if (M1.move_player == 7):
+            M1.move_comp = 6
+            comp_str = "attacked on two fronts"
+        if (M1.move_player ==8):
+            M1.move_comp = 6
+            comp_str = "used a pincer momvement"
+        if (M1.move_player == 9):
+            M1.move_comp = 6
+            comp_str = "trapped you on two fronts"
+        if (M1.move_player == 10):
+            M1.move_comp = 2
+            comp_str = "flanked your position"
         #Gets how much the user wants to commit
         M1.armyCommitments = M1.getArmyResources(c1)
         M1.navyCommitments = M1.getNavyResources(c1)
@@ -181,6 +199,7 @@ class Main:
             break
         #number used to determine players chance of winning
         p1 = M1.prob()
+        print("The computer " + comp_str + "\n")
         comp_resources = M1.determineComputerMove(p1,c2)
         print(" The computer committed " + str(comp_resources[0]) + " ground units\n",
               "The computer committed " + str(comp_resources[1]) + " naval units\n",
@@ -188,8 +207,8 @@ class Main:
               "The computer committed " + str(comp_resources[3]) + " nuclear missiles\n",
               "")
         #player win percentage
-        p2 = (M1.prob()/.5) * M1.maneuvers[M1.move_comp][M1.move_player]
+        p2 = (M1.prob()/M1.maneuvers[M1.move_player][M1.move_comp]) * M1.maneuvers[M1.move_comp][M1.move_player]
         winner = M1.winner(p1,p2)
-        print("There is an " + str(winner) +" percent chance of you winning")
+        print("There is an " + str(int(winner)) +" percent chance of you winning")
         print("The computer " + comp_str + " while you " + M1.player_str)
         end_game = True
